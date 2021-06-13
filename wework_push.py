@@ -80,13 +80,13 @@ class WeWorkPush():
 
 @app.route('/', methods=['GET'])
 def msg():
-    msg = request.args.get('msg')
+    msg = request.args.get('msg') if request.args.get('msg') else 'Hello, World!'
     msg = parse.unquote(msg)
     msg = markdown.markdown(msg)
     # 简单粗暴的手机页面适应
     mobile_page = '<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">'
-    ret = msg if msg else 'Hello, World!'
-    return mobile_page + ret
+    ret = mobile_page + msg
+    return ret
 
 
 @app.route('/' + SCKEY + '.send', methods=['POST', 'GET'])
