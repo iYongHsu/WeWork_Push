@@ -65,13 +65,13 @@ class WeWorkPush():
         n = 0
         for c in s:
             if ord(c) > 127:
+                if n < 2048:
+                    urls = urls + c
                 n += 2
-                if n < 2048:
-                    urls = urls + c
             else:
-                n += 1
                 if n < 2048:
                     urls = urls + c
+                n += 1
         if n > 2048:
             logging.debug('url字节数：' + str(n) + '已截取前2048个字节数据。')
         else:
