@@ -53,10 +53,10 @@ class WeWorkPush():
     def send_message(self, msg, title, url='', to_user='@all'):
         msgtype = 'textcard'
         title = title
-        msg = msg
+        msg = msg.replace('\r\n\r\n', '\r\n')
         time = '通知时间：' + datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         message = f"{time}\n通知内容：{msg}"
-        url = url if url else self._host + '?msg=' + parse.quote(msg)
+        url = url if url else self._host + '?msg=' + msg.replace('#', '%23').replace('\r\n', '%0D%0A')
         to_user = to_user
         send_url = 'https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=' + self.get_access_token()
         msg = {"title": title, "description": message[0:168], "url": url[0:2048], "btntxt": "详情"}
@@ -84,8 +84,12 @@ def msg():
     msg = parse.unquote(msg)
     msg = markdown.markdown(msg)
     # 简单粗暴的手机页面适应
-    mobile_page = '<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">'
-    ret = mobile_page + msg
+    mobile_page = '<!doctype html><html><head>' \
+                  '<meta charset="UTF-8" name="viewport" content="width=device-width,' \
+                  'initial-scale=1.0,user-scalable=no">' \
+                  '</head><body><div id="content">' \
+                  '<view style=”white-space:pre-wrap”>' + msg + '</view></div></body></html>'
+    ret = mobile_page
     return ret
 
 
