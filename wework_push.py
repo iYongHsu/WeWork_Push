@@ -56,7 +56,7 @@ class WeWorkPush():
         msg = msg.replace('\r\n\r\n', '\r\n')
         time = '通知时间：' + datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         message = f"{time}\n通知内容：{msg}"
-        url = url if url else self._host + '?msg=' + msg.replace('#', '%23').replace('\r\n', '%0D%0A')
+        url = url if url else self._host + '?msg=' + msg.replace('#', '%23').replace('\r', '%0D').replace('\n', '%0A').replace('\t', '%09').replace('     ', '%09')
         to_user = to_user
         send_url = 'https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=' + self.get_access_token()
         msg = {"title": title, "description": message[0:168], "url": url[0:2048], "btntxt": "详情"}
