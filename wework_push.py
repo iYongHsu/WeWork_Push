@@ -60,7 +60,23 @@ class WeWorkPush():
             .replace('\t', '%09').replace('     ', '%09')
         to_user = to_user
         send_url = 'https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=' + self.get_access_token()
-        msg = {"title": title, "description": message[0:168], "url": url[0:2048], "btntxt": "详情"}
+        s = url
+        urls = ''
+        n = 0
+        for c in s:
+            if ord(c) > 127:
+                n += 2
+                if n < 2048:
+                    urls = urls + c
+            else:
+                n += 1
+                if n < 2048:
+                    urls = urls + c
+        if n > 2048:
+            logging.debug('url字节数：' + str(n) + '已截取前2048个字节数据。')
+        else:
+            logging.debug('url字节数：' + str(n))
+        msg = {"title": title, "description": message[0:168], "url": urls, "btntxt": "详情"}
 
         send_data = {
             "touser": to_user,
