@@ -56,21 +56,21 @@ class WeWorkPush():
         msg = msg.replace('\r\n\r\n', '\r\n')
         time = '通知时间：' + datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         message = f"{time}\n通知内容：{msg}"
+        msg = markdown.markdown(msg)
         url = url if url else self._host + '?msg=' + msg.replace('#', '%23').replace('\r', '%0D').replace('\n', '%0A')\
             .replace('\t', '%09').replace('     ', '%09')
         to_user = to_user
         send_url = 'https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=' + self.get_access_token()
-        s = url
         urls = ''
         n = 0
-        for c in s:
-            if ord(c) > 127:
+        for u in url:
+            if ord(u) > 127:
                 if n < 2048:
-                    urls = urls + c
+                    urls = urls + u
                 n += 2
             else:
                 if n < 2048:
-                    urls = urls + c
+                    urls = urls + u
                 n += 1
         if n > 2048:
             logging.debug('url字节数：' + str(n) + '已截取前2048个字节数据。')
@@ -99,7 +99,7 @@ class WeWorkPush():
 def msg():
     msg = request.args.get('msg') if request.args.get('msg') else 'Hello, World!'
     msg = parse.unquote(msg)
-    msg = markdown.markdown(msg)
+    # msg = markdown.markdown(msg)
     # 简单粗暴的手机页面适应
     mobile_page = '<!doctype html><html><head>' \
                   '<meta charset="UTF-8" name="viewport" content="width=device-width,' \
