@@ -73,6 +73,7 @@ class WeWorkPush():
         time = '通知时间：' + datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         digest = f"{time}\n通知内容：{msg}"
         message = f"{time}<br/>通知内容：{msg}"
+        message = message.replace('\n', '<br/>')
         to_user = to_user
         send_url = 'https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=' + self.get_access_token()
         media_id = self.upload_file(IMAGESFILE,'image')
